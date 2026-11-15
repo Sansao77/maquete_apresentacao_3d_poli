@@ -1,0 +1,14 @@
+# Dependências e artefatos do shell desktop
+desktop/node_modules/
+desktop/app/
+desktop/dist/
+
+# Artefatos de SO / editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.log
+.idea/
+.vscode/
+*.swp
+*~

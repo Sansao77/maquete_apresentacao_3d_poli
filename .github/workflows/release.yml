@@ -1,0 +1,141 @@
+name: Release
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: 'Tag existente (opcional)'
+        required: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  # Abre/atualiza a PR de release e, quando ela é mesclada, cria tag + Release.
+  release-please:
+    if: github.event_name == 'push'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+      version: ${{ steps.release.outputs.version }}
+    steps:
+      - id: release
+        uses: googleapis/release-please-action@v5
+        with:
+          config-file: release-please-config.json
+          manifest-file: .release-please-manifest.json
+
+  # Tags/Releases criadas com GITHUB_TOKEN não disparam outros workflows;
+  # por isso o build é um job dependente e não um `on: push: tags`.
+  build:
+    needs: release-please
+    if: |
+      always() &&
+      (github.event_name == 'workflow_dispatch' ||
+       needs.release-please.outputs.release_created == 'true')
+    name: build (${{ matrix.artifact_os }})
+    runs-on: ${{ matrix.os }}
+    # contents: write é necessário apenas para anexar os zips à Release.
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Comente a linha de um SO para desativar aquela plataforma.
+          - os: windows-latest
+            artifact_os: win
+          - os: ubuntu-latest
+            artifact_os: linux
+          - os: macos-latest
+            artifact_os: mac
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v7
+        with:
+          node-version: lts/*
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+
+      - name: Install dependencies
+        working-directory: desktop
+        run: npm ci
+
+      - name: Prepare offline app package
+        working-directory: desktop
+        run: npm run prep
+
+      - name: Resolve version and tag
+        id: meta
+        shell: bash
+        working-directory: desktop
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          INPUT_TAG: ${{ inputs.tag }}
+          RELEASE_TAG: ${{ needs.release-please.outputs.tag_name }}
+          RELEASE_VERSION: ${{ needs.release-please.outputs.version }}
+        run: |
+          set -euo pipefail
+
+          tag="${INPUT_TAG:-}"
+          version=""
+
+          if [ -n "$tag" ]; then
+            version="${tag#v}"
+          elif [ "$EVENT_NAME" = "push" ] && [ -n "${RELEASE_TAG:-}" ]; then
+            tag="$RELEASE_TAG"
+            version="${RELEASE_VERSION:-${tag#v}}"
+          else
+            version="$(node -p "require('./package.json').version")"
+            tag=""
+          fi
+
+          if [ -z "$version" ]; then
+            echo "::error::Não foi possível resolver a versão do build."
+            exit 1
+          fi
+
+          arch="$(node -p "process.arch")"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "arch=$arch" >> "$GITHUB_OUTPUT"
+          echo "Resolved tag='$tag' version='$version' arch='$arch'"
+
+      - name: Build desktop executable
+        working-directory: desktop
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: 'false'
+        run: npx electron-builder --publish never
+
+      - name: Show generated artifacts
+        shell: bash
+        working-directory: desktop
+        run: ls -l dist
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v7
+        with:
+          name: mangue-verde-3d-v${{ steps.meta.outputs.version }}-${{ matrix.artifact_os }}-${{ steps.meta.outputs.arch }}
+          path: desktop/dist/*.zip
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attach zips to GitHub Release
+        if: steps.meta.outputs.tag != ''
+        shell: bash
+        working-directory: desktop
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.meta.outputs.tag }}
+        run: gh release upload "$TAG" dist/*.zip --clobber

@@ -1,0 +1,34 @@
+appId: com.mangueverde.maquete3d
+productName: Mangue Verde 3D
+
+asar: true
+compression: maximum
+npmRebuild: false
+
+directories:
+  buildResources: build
+  output: dist
+
+files:
+  - main.js
+  - package.json
+  - app/**/*
+
+win:
+  target:
+    - zip
+  # artifactName explícito por plataforma: não dependemos da expansão de ${os}.
+  artifactName: mangue-verde-3d-v${version}-win-${arch}.${ext}
+
+mac:
+  target:
+    - zip
+  # Build sem certificado: runner limpo não tem identidade de assinatura.
+  identity: null
+  artifactName: mangue-verde-3d-v${version}-mac-${arch}.${ext}
+
+linux:
+  target:
+    - zip
+  executableName: mangue-verde-3d
+  artifactName: mangue-verde-3d-v${version}-linux-${arch}.${ext}

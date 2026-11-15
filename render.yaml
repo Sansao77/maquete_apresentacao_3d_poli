@@ -1,0 +1,11 @@
+services:
+  - type: web
+    name: mangue-verde-3d
+    runtime: static
+    # O site publicado é o HTML da raiz do repositório. Mantido como "." para
+    # preservar exatamente a URL e os bytes servidos hoje em produção.
+    staticPublishPath: .
+    headers:
+      - path: /*
+        name: Cache-Control
+        value: public, max-age=0, must-revalidate

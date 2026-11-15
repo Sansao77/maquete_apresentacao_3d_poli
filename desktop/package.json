@@ -1,0 +1,25 @@
+{
+  "name": "mangue-verde-3d-desktop",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Wrapper desktop offline da maquete 3D Mangue Verde",
+  "main": "main.js",
+  "author": "Mangue Verde",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "prep": "node scripts/prepare.js",
+    "start": "npm run prep && electron .",
+    "build": "npm run prep && electron-builder",
+    "build:win": "npm run prep && electron-builder --win",
+    "build:mac": "npm run prep && electron-builder --mac",
+    "build:linux": "npm run prep && electron-builder --linux"
+  },
+  "devDependencies": {
+    "electron": "^45.3.2",
+    "electron-builder": "^26.18.0",
+    "three": "0.128.0"
+  }
+}

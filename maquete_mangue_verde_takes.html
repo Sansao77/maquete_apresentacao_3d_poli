@@ -1,0 +1,224 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="utf-8"><title>Mangue Verde | Estudo Ambiental Simplificado em takes</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><style>
+:root{--ink:#eaf2ee;--muted:#a9bbb2;--panel:rgba(9,26,25,.88);--line:rgba(220,244,231,.18);--mint:#8de0b4;--gold:#f1cb78}
+*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#101c1b;color:var(--ink);font-family:Inter,"Segoe UI",system-ui,Arial,sans-serif}
+#c{position:fixed;inset:0;width:100%;height:100%;touch-action:none}
+.scrim{position:fixed;inset:0;pointer-events:none;background:linear-gradient(180deg,rgba(5,15,15,.6),transparent 20%,transparent 68%,rgba(5,15,15,.7))}
+.top{position:fixed;z-index:3;top:calc(18px + env(safe-area-inset-top,0px));left:24px;right:24px;display:flex;justify-content:space-between;align-items:flex-start;pointer-events:none}
+.eyebrow{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--mint);font-weight:800}.top h1{margin:5px 0 0;font-size:clamp(20px,3vw,30px);letter-spacing:-.03em}.top p{margin:4px 0;color:#c8d6cf;font-size:12px}
+.status{border:1px solid rgba(241,203,120,.4);color:#f5d994;background:rgba(44,34,15,.66);padding:8px 12px;border-radius:999px;font-size:10px;letter-spacing:.08em;text-transform:uppercase}
+.panel{position:fixed;z-index:3;right:24px;top:50%;transform:translateY(-46%);width:min(380px,calc(100vw - 32px));max-height:calc(100% - 210px);overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;backdrop-filter:blur(16px);box-shadow:0 20px 70px #0008}
+.kicker{font-size:10px;color:var(--mint);letter-spacing:.18em;text-transform:uppercase;font-weight:800}.panel h2{font-size:23px;line-height:1.12;letter-spacing:-.03em;margin:8px 0 9px}.desc{font-size:13.5px;line-height:1.6;color:#d0ddd6;margin:0 0 12px}
+.metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.metric{border:1px solid var(--line);border-radius:11px;padding:10px;background:#ffffff0a}.metric strong{display:block;font-size:15px;color:#fff;line-height:1.25}.metric span{display:block;font-size:10.5px;color:var(--muted);margin-top:4px}
+.big{display:none;font-size:34px;font-weight:800;color:#ff8f7a;margin:6px 0}.big small{display:block;font-size:11px;font-weight:400;color:var(--muted)}
+.note{border-left:2px solid var(--gold);padding:8px 11px;background:#f1cb7812;color:#ecdcb8;font-size:11.5px;line-height:1.5;margin-top:10px}
+.controls{position:fixed;z-index:4;left:24px;bottom:calc(112px + env(safe-area-inset-bottom,0px));display:flex;gap:8px;flex-wrap:wrap}
+.btn{border:1px solid var(--line);border-radius:11px;padding:11px 14px;min-height:44px;color:var(--ink);background:#0b201eec;cursor:pointer;font:inherit;font-size:13px}.btn:hover{border-color:var(--mint);color:var(--mint)}.btn.primary{background:var(--mint);color:#09201a;border-color:var(--mint);font-weight:800}.btn.on{border-color:var(--gold);color:var(--gold)}
+.btn:focus-visible,.thumb:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+.timeline{position:fixed;z-index:4;left:0;right:0;bottom:0;padding:12px 24px calc(16px + env(safe-area-inset-bottom,0px));background:linear-gradient(0deg,rgba(4,14,14,.97),rgba(4,14,14,.6),transparent)}
+.th{display:flex;justify-content:space-between;margin-bottom:8px;font-size:10px;letter-spacing:.14em;text-transform:uppercase;color:#b7c9c0}
+.thumbs{display:flex;gap:8px;overflow-x:auto;padding-bottom:3px;scrollbar-width:thin;scrollbar-color:#57766a transparent}
+.thumb{flex:0 0 auto;min-width:104px;text-align:left;padding:9px 11px;border-radius:10px;border:1px solid var(--line);background:#102321d0;color:#b9cbc2;cursor:pointer;font:inherit;font-size:11.5px}.thumb small{display:block;color:#6f9382;font-size:9px;margin-bottom:4px;letter-spacing:.1em}.thumb.active{border-color:var(--mint);background:#163c30;color:#fff}.thumb:hover{border-color:var(--mint)}
+#pg{height:2px;background:#ffffff1c;margin-top:9px;border-radius:5px;overflow:hidden}#bar{height:100%;width:0;background:var(--mint);transition:width .25s}
+.hint{position:fixed;z-index:2;left:24px;top:calc(96px + env(safe-area-inset-top,0px));font-size:11px;color:#d4e2db;background:#081816b0;border:1px solid var(--line);border-radius:99px;padding:7px 12px;max-width:min(560px,60vw)}
+@media(max-width:900px){.top{left:14px;right:14px}.status{display:none}.hint{display:none}.panel{top:auto;bottom:calc(172px + env(safe-area-inset-bottom,0px));right:10px;left:10px;width:auto;transform:none;max-height:38vh;padding:14px}.panel h2{font-size:19px}.desc{font-size:12.5px}.controls{left:10px;bottom:calc(112px + env(safe-area-inset-bottom,0px))}.timeline{padding:10px 12px calc(12px + env(safe-area-inset-bottom,0px))}.thumb{min-width:92px}}
+</style></head><body>
+<canvas id="c"></canvas><div class="scrim"></div>
+<header class="top"><div><div class="eyebrow">Estudo ambiental simplificado · caso didático</div><h1>MANGUE VERDE</h1><p>Centro de distribuição logístico · leitura ambiental em 3D</p></div><div class="status">Cenário · dados ilustrativos</div></header>
+<div class="hint">Arraste para girar · roda para zoom · ← → ou botões para trocar de take</div>
+<section class="panel" id="panel"><div class="kicker" id="kicker"></div><h2 id="title"></h2><p class="desc" id="desc"></p><div class="big" id="big"></div><div class="metrics" id="metrics"></div><div class="note" id="note"></div></section>
+<div class="controls"><button class="btn" id="back">← Anterior</button><button class="btn primary" id="next">Próximo take →</button><button class="btn" id="home">Voltar ao take</button><button class="btn" id="mt" style="display:none"></button><button class="btn" id="lb">Rótulos</button><button class="btn" id="au">Auto ▶</button></div>
+<nav class="timeline" aria-label="Takes"><div class="th"><span>Roteiro visual</span><span id="counter"></span></div><div class="thumbs" id="thumbs"></div><div id="pg"><div id="bar"></div></div></nav>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+<script>
+const $=id=>document.getElementById(id),PI=Math.PI,MOB=matchMedia('(pointer:coarse)').matches||innerWidth<900,V3=a=>new THREE.Vector3(...a);
+const cv=$('c'),R=new THREE.WebGLRenderer({canvas:cv,antialias:!MOB});R.setPixelRatio(Math.min(devicePixelRatio,MOB?1.5:2));R.shadowMap.enabled=true;R.shadowMap.type=THREE.PCFSoftShadowMap;
+const S=new THREE.Scene();S.background=new THREE.Color(0xbcd9ef);S.fog=new THREE.Fog(0xdbe9f4,600,1900);
+const cam=new THREE.PerspectiveCamera(46,1,1,4000);cam.position.set(560,520,760);
+const ctl=new THREE.OrbitControls(cam,cv);ctl.target.set(150,0,40);ctl.enableDamping=true;ctl.maxPolarAngle=1.5;ctl.minDistance=40;ctl.maxDistance=1800;
+S.add(new THREE.HemisphereLight(0xffffff,0x6d7f58,.8));
+const sun=new THREE.DirectionalLight(0xfff2dc,.95);sun.position.set(0,360,300);sun.castShadow=true;sun.shadow.mapSize.set(MOB?1024:2048,MOB?1024:2048);const sc=sun.shadow.camera;sc.left=-340;sc.right=340;sc.top=340;sc.bottom=-340;sc.far=900;sun.target.position.set(210,0,40);S.add(sun,sun.target);
+{const c=document.createElement('canvas');c.width=2;c.height=256;const g=c.getContext('2d'),gr=g.createLinearGradient(0,0,0,256);gr.addColorStop(0,'#4f8fd0');gr.addColorStop(.55,'#a9cdea');gr.addColorStop(1,'#e8f1f7');g.fillStyle=gr;g.fillRect(0,0,2,256);S.add(new THREE.Mesh(new THREE.SphereGeometry(2500,16,16),new THREE.MeshBasicMaterial({map:new THREE.CanvasTexture(c),side:1,fog:false})))}
+const M=(c,o)=>new THREE.MeshStandardMaterial(Object.assign({color:c,roughness:.9},o)),MB=(c,o)=>new THREE.MeshBasicMaterial(Object.assign({color:c,transparent:true,opacity:.3,depthWrite:false},o));
+function nt(a,b,rep){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.fillStyle=a;g.fillRect(0,0,128,128);g.fillStyle=b;g.globalAlpha=.25;for(let i=0;i<900;i++)g.fillRect(Math.random()*128,Math.random()*128,2,2);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rep,rep);return t}
+function pl(w,d,x,z,mat,y=.05,g=S){const m=new THREE.Mesh(new THREE.PlaneGeometry(w,d),mat);m.rotation.x=-PI/2;m.position.set(x,y,z);m.receiveShadow=true;g.add(m);return m}
+function bx(w,h,d,x,z,mat,g=S,y=0){const m=new THREE.Mesh(new THREE.BoxGeometry(w,h,d),mat);m.position.set(x,y+h/2,z);m.castShadow=m.receiveShadow=true;g.add(m);return m}
+const SP=[];function lab(t,x,y,z,s=.6,gr=S){const c=document.createElement('canvas'),g=c.getContext('2d');g.font='bold 40px Arial';const w=g.measureText(t).width+40;c.width=w;c.height=70;g.font='bold 40px Arial';g.fillStyle='rgba(18,52,36,.9)';g.fillRect(0,0,w,70);g.fillStyle='#fff';g.textBaseline='middle';g.fillText(t,20,36);const sp=new THREE.Sprite(new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),depthTest:false,transparent:true}));sp.scale.set(w/70*4*s*7,4*s*7,1);sp.position.set(x,y,z);sp.renderOrder=9;gr.add(sp);SP.push(sp);return sp}
+function ribbon(c,w,mat,y,g){const n=90,p=[],idx=[];for(let i=0;i<=n;i++){const t=i/n,a=c.getPoint(t),b=c.getTangent(t),nx=-b.z,nz=b.x,l=Math.hypot(nx,nz)||1;p.push(a.x+nx/l*w/2,y,a.z+nz/l*w/2,a.x-nx/l*w/2,y,a.z-nz/l*w/2);if(i<n){const k=i*2;idx.push(k,k+1,k+2,k+1,k+3,k+2)}}const ge=new THREE.BufferGeometry();ge.setAttribute('position',new THREE.Float32BufferAttribute(p,3));ge.setIndex(idx);ge.computeVertexNormals();const m=new THREE.Mesh(ge,mat);m.receiveShadow=true;g.add(m);return m}
+function trees(n,fn,gr,sz=1.6){const tr=new THREE.InstancedMesh(new THREE.CylinderGeometry(.4,.6,4,5),M(0x6b4a2b),n),cr=new THREE.InstancedMesh(new THREE.IcosahedronGeometry(1,1),M(0xffffff),n),d=new THREE.Object3D(),c=new THREE.Color();
+for(let i=0;i<n;i++){const[x,z]=fn(),s=(.8+Math.random()*.9)*sz;d.position.set(x,2*s,z);d.scale.set(s,s,s);d.updateMatrix();tr.setMatrixAt(i,d.matrix);d.position.set(x,5*s+1,z);d.scale.set(3.2*s,3.4*s,3.2*s);d.updateMatrix();cr.setMatrixAt(i,d.matrix);cr.setColorAt(i,c.setHSL(.27+Math.random()*.06,.5,.26+Math.random()*.12))}
+tr.castShadow=cr.castShadow=true;gr.add(tr,cr);return cr}
+const RN=(a,b)=>a+Math.random()*(b-a);
+
+// ===== grupos por impacto / estudo: i = sem medidas, m = com medidas, c = comum
+const KEYS=['sup','poeira','ruido','vib','traf','eros','dren','res'],STK=['topo','hid','veg','solo','rec','via'],P={},X={};
+KEYS.concat(STK).forEach(k=>{P[k]=new THREE.Group();S.add(P[k]);X[k]={i:new THREE.Group(),m:new THREE.Group(),c:new THREE.Group()};P[k].add(X[k].i,X[k].m,X[k].c)});
+
+// ===== região
+pl(3200,3200,0,0,M(0xffffff,{map:nt('#86a05f','#657f44',130)}),-.05);
+const AS=M(0x3a3d42),YL=M(0xe8c547);pl(22,3200,360,0,AS,.04);pl(.6,3200,360,0,YL,.06);pl(40,10,345,100,AS,.045);pl(300,9,200,215,AS,.045);pl(9,90,110,175,AS,.045);pl(300,.5,200,215,M(0xdddddd),.05);
+lab('Rodovia (BR)',395,22,-120,.5);lab('Via local',230,14,215,.5);lab('Rua Comunitária',70,14,175,.5);
+const RV=new THREE.CatmullRomCurve3([[-250,-700],[-80,-300],[0,-120],[30,40],[10,200],[-90,380],[-250,700]].map(([x,z])=>new THREE.Vector3(x,.1,z)));
+const riv=M(0x3d86b5,{roughness:.2,side:2});ribbon(RV,8,riv,.12,S);lab('Rio (≈ 8 m de largura)',-10,16,60,.6);
+const lotB=new THREE.Group(),gl=new THREE.Group();S.add(lotB,gl);
+const LOTS={A:[60,-300,200,160,'Lote A · várzea e APP',0xd7263d],B:[210,40,240,170,'Lote B · escolhido',0x2f9e44],C:[180,360,200,160,'Lote C · área adensada',0xe08a1e]};
+Object.entries(LOTS).forEach(([k,[x,z,w,d,t,c]])=>{const g=k=='B'?lotB:gl,pts=[[-w/2,-d/2],[w/2,-d/2],[w/2,d/2],[-w/2,d/2]].map(([a,b])=>new THREE.Vector3(x+a,.5,z+b));g.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(pts),new THREE.LineBasicMaterial({color:c})));pl(w,d,x,z,MB(c,{opacity:.22}),.3,k=='B'?lotB:gl);lab(t,x,70,z,.8,g)});
+pl(90,60,20,-300,MB(0x3d9ea5,{opacity:.5}),.35,gl);pl(60,50,100,-250,MB(0x3d9ea5,{opacity:.5}),.35,gl);
+// APP
+const app=ribbon(RV,68,MB(0x2f9e44,{opacity:.28,side:2}),.3,X.hid.c);lab('APP: 30 m por margem',-40,26,80,.5,X.hid.c);
+// escola, casas
+
+{const hs=[];for(let x=40;x<=340;x+=20)for(let z=160;z<=560;z+=20){if(Math.abs(z-215)<11)continue;if(x>100&&x<120&&z<=215)continue;if(Math.abs(x-150)<32&&Math.abs(z-190)<22)continue;if(x>70&&x<290&&z>270&&z<450)continue;hs.push([x+RN(-2.5,2.5),z+RN(-2.5,2.5)])}
+const hw=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),M(0xffffff),hs.length),hr=new THREE.InstancedMesh(new THREE.BoxGeometry(1,1,1),M(0xa8553a),hs.length),d=new THREE.Object3D(),c=new THREE.Color();
+hs.forEach(([x,z],i)=>{const w=RN(11,15),dd=RN(11,15),h=RN(3.5,6.5);d.position.set(x,h/2,z);d.scale.set(w,h,dd);d.updateMatrix();hw.setMatrixAt(i,d.matrix);hw.setColorAt(i,c.setHSL(RN(.05,.2),.35,RN(.72,.85)));d.position.set(x,h+.4,z);d.scale.set(w+1.5,.8,dd+1.5);d.updateMatrix();hr.setMatrixAt(i,d.matrix)});hw.castShadow=hr.castShadow=true;S.add(hw,hr);lab('Comunidade',230,22,250,.55)}
+// mata
+trees(260,()=>[RN(95,335),RN(-200,-70)],S);
+trees(110,()=>{const t=Math.random(),a=RV.getPoint(t),b=RV.getTangent(t),s=(Math.random()<.5?-1:1)*RN(28,60);return[a.x-b.z*s,a.z+b.x*s]},S);
+const tIn=new THREE.Group();S.add(tIn);const tInC=trees(160,()=>[RN(97,323),RN(-42,8)],tIn),tInBase=tInC.instanceColor.array.slice();
+// terreno bare/lawn
+const bare=pl(240,170,210,40,M(0x8b6b4a,{transparent:true}),.07),lawn=pl(240,170,210,40,M(0xffffff,{map:nt('#7fae58','#5d8c3e',14)}),.075);
+
+// ===== projeto no lote B
+const prj=new THREE.Group(),infra=new THREE.Group(),gals=[];S.add(prj);prj.add(infra);
+function ft(base,len,fl){const c=document.createElement('canvas');c.width=c.height=128;const g=c.getContext('2d');g.fillStyle=base;g.fillRect(0,0,128,128);g.fillStyle='#4f7391';g.fillRect(8,30,112,62);g.fillStyle='rgba(255,255,255,.28)';g.fillRect(8,30,112,14);g.fillStyle='rgba(0,0,0,.35)';for(let i=1;i<4;i++)g.fillRect(i*32-1,30,2,62);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(Math.max(1,Math.round(len/8)),fl);return t}
+function dockTex(len){const c=document.createElement('canvas');c.width=256;c.height=128;const g=c.getContext('2d');g.fillStyle='#d4d8db';g.fillRect(0,0,256,128);g.fillStyle='#4a5560';g.fillRect(0,0,256,18);g.fillStyle='#2d3238';for(let i=0;i<4;i++)g.fillRect(14+i*62,52,44,76);g.fillStyle='#e8c547';g.fillRect(0,122,256,6);const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(len/64,1);return t}
+function gal(x,z,w,d){const g=new THREE.Group();g.position.set(x,0,z);const me=M(0xcfd3d6),md=M(0xffffff,{map:dockTex(w)}),mr=M(0x9aa3aa);const m=new THREE.Mesh(new THREE.BoxGeometry(w,14,d),[me,me,mr,mr,md,md]);m.position.y=7;m.castShadow=m.receiveShadow=true;g.add(m);
+const pn=new THREE.InstancedMesh(new THREE.BoxGeometry(4,.2,2.4),M(0x1e3a8a,{roughness:.3,metalness:.4}),84),dm=new THREE.Object3D();let n=0;for(let r=0;r<6;r++)for(let k=0;k<14;k++,n++){dm.position.set(-w/2+8+k*(w-16)/13,14.5,-d/2+7+r*(d-14)/5);dm.rotation.x=-.18;dm.updateMatrix();pn.setMatrixAt(n,dm.matrix)}pn.castShadow=true;g.add(pn);prj.add(g);gals.push(g);return g}
+gal(200,-5,130,45);gal(200,60,130,45);
+{const o=new THREE.Group();o.position.set(170,0,100);const mx=M(0xffffff,{map:ft('#e6e2d3',16,2)}),mz=M(0xffffff,{map:ft('#e6e2d3',40,2)}),mr=M(0x5f8f4a);const m=new THREE.Mesh(new THREE.BoxGeometry(40,8,16),[mx,mx,mr,mr,mz,mz]);m.position.y=4;m.castShadow=true;o.add(m);prj.add(o);gals.push(o)}
+const as=M(0x45494f);pl(65,170,297,40,as,.08,infra);pl(130,19,200,27.5,as,.08,infra);pl(60,20,235,105,as,.08,infra);bx(6,3.5,6,324,92,M(0xdadada),infra);lab('Portaria · acesso pela rodovia',324,16,92,.45,infra);
+{const cars=new THREE.InstancedMesh(new THREE.BoxGeometry(1.9,1.4,4.2),M(0xffffff,{roughness:.4}),36),d=new THREE.Object3D(),c=new THREE.Color();for(let n=0;n<36;n++){d.position.set(212+(n%12)*4.2,.8,99+Math.floor(n/12)*6);d.updateMatrix();cars.setMatrixAt(n,d.matrix);cars.setColorAt(n,c.setHSL(Math.random(),.25,.5))}infra.add(cars)}
+lab('Galpão 1 + Galpão 2 (painéis solares)',200,34,27,.55,infra);lab('Pátio de manobras',297,12,40,.45,infra);
+
+// ===== máquinas
+const maq=new THREE.Group(),m0=new THREE.Group(),m1=new THREE.Group(),AN=[];S.add(maq);maq.add(m0,m1);
+function wheel(g,x,z,r){const w=new THREE.Mesh(new THREE.CylinderGeometry(r,r,.9,12),M(0x1e1e1e));w.rotation.z=PI/2;w.position.set(x,r,z);w.castShadow=true;g.add(w)}
+function dump(){const g=new THREE.Group(),c=0xf2b01e;bx(2.8,.8,10,0,0,M(0x3a3d42),g,.8);bx(2.8,2.4,2.6,0,4,M(c),g,.9);bx(2.4,.9,.1,0,5.3,M(0x9ec6e4),g,1.8);const bd=new THREE.Group();bd.position.set(0,1.7,-4.2);g.add(bd);bx(3.1,1.9,6.4,0,3.2,M(0xe8a317),bd,0);[3.5,-1.5,-3.5].forEach(z=>[-1.5,1.5].forEach(x=>wheel(g,x,z,.9)));return{g,bd}}
+function backhoe(){const g=new THREE.Group(),y=M(0xf2b01e);bx(2.4,1.4,4.2,0,0,y,g,1);bx(2.2,2.2,2,0,-.5,y,g,2.4);bx(2.1,1.4,.1,0,.5,M(0x9ec6e4),g,3);wheel(g,-1.4,1.6,1.1);wheel(g,1.4,1.6,1.1);wheel(g,-1.3,-1.8,.8);wheel(g,1.3,-1.8,.8);bx(.4,.4,2.6,-1,3.3,y,g,.8);bx(.4,.4,2.6,1,3.3,y,g,.8);bx(3,.9,1.1,0,4.4,M(0x555555),g,.3);
+const bm=new THREE.Group();bm.position.set(0,2.2,-2.3);g.add(bm);bx(.5,.5,3.6,0,-1.8,y,bm,0);const dp=new THREE.Group();dp.position.set(0,0,-3.6);bm.add(dp);bx(.4,.4,3,0,-1.4,y,dp,0);bx(1.2,.9,.9,0,-3.1,M(0x555555),dp,-.4);return{g,bm,dp}}
+function exc(){const g=new THREE.Group(),y=M(0xf2b01e);bx(1.1,1.2,5.2,-1.8,0,M(0x333333),g);bx(1.1,1.2,5.2,1.8,0,M(0x333333),g);const hs=new THREE.Group();hs.position.y=1.2;g.add(hs);bx(3.6,1.6,4.2,0,0,y,hs);bx(1.8,1.8,1.8,-.8,1,y,hs,1.6);bx(1.2,1.2,1.4,0,-2.4,M(0x555555),hs,.1);
+const bm=new THREE.Group();bm.position.set(.9,1,1.5);hs.add(bm);bx(.7,.7,5.5,0,2.8,y,bm,0);const ar=new THREE.Group();ar.position.set(0,0,5.5);bm.add(ar);bx(.55,.55,4,0,2,y,ar,0);bx(1.5,1.1,1.2,0,4.2,M(0x555555),ar,-.5);return{g,hs,bm,ar}}
+function mixer(){const g=new THREE.Group();bx(2.8,.8,9,0,0,M(0x3a3d42),g,.8);bx(2.8,2.4,2.6,0,3.6,M(0x2d7ff9),g,.9);const d=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.1,6.5,14),M(0xdfe3e6));d.rotation.x=PI/2;d.rotation.z=.12;d.position.set(0,3.3,-1.2);d.castShadow=true;g.add(d);[3.2,-1.2,-3.2].forEach(z=>[-1.4,1.4].forEach(x=>wheel(g,x,z,.9)));return g}
+function put(o,x,z,ry,grp){o.position.set(x,0,z);o.rotation.y=ry;grp.add(o)}
+[[140,-22,.6],[255,-30,-.6]].forEach(([x,z,r],i)=>{const e=exc();put(e.g,x,z,r,i?m0:maq.children[0]);m0.add(e.g);AN.push(t=>{e.hs.rotation.y=Math.sin(t*.5+i)*.8;e.bm.rotation.x=-.5+.15*Math.sin(t+i);e.ar.rotation.x=.8*Math.sin(t*.7+i)})});
+[[165,72,.4,0],[275,10,2.4,0],[150,-5,1.9,1],[285,60,-.5,1]].forEach(([x,z,r,w],i)=>{const b=backhoe();put(b.g,x,z,r,w?m1:m0);AN.push(t=>{b.bm.rotation.x=.3+.25*Math.sin(t*1.1+i);b.dp.rotation.x=-.7+.4*Math.sin(t*1.4+i)})});
+[[240,100,.2],[205,112,-.1]].forEach(([x,z,r])=>{put(mixer(),x,z,r,m1)});
+{const g=new THREE.Group();g.position.set(165,0,40);bx(2,48,2,0,0,M(0xf2b01e),g);bx(46,1.4,1.4,10,0,M(0xf2b01e),g,48);bx(3,3,3,-10,0,M(0x666666),g,45);m1.add(g);AN.push(t=>g.rotation.y=t*.12);lab('Grua',165,58,40,.4,m1)}
+const LP=new THREE.CatmullRomCurve3([[115,.6,-36],[210,.6,-36],[300,.6,-36],[300,.6,40],[300,.6,118],[200,.6,118],[115,.6,118],[115,.6,40]].map(V3),true),dumps=[];
+for(let i=0;i<4;i++){const d=dump();maq.add(d.g);dumps.push(d)}
+lab('Escavadeiras, retroescavadeiras e caminhões basculantes',210,40,-36,.5,maq);
+// ===== estudos
+{const ls=[[-60,30,150],[-40,30,120],[-20,30,90],[0,30,60]];[0,1,2,3].forEach(i=>{const e=new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints(Array.from({length:48},(_,k)=>V3([210+Math.cos(k/48*PI*2)*(70+i*55),.7+i*.05,40+Math.sin(k/48*PI*2)*(45+i*40)]))),new THREE.LineBasicMaterial({color:0x8a6a3a}));X.topo.c.add(e)});
+for(let i=0;i<6;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(3,10,10),M(0xc0562d));c.rotation.z=PI/2;c.position.set(150-i*12,2,-30+i*28);X.topo.c.add(c)}
+lab('Declive suave para o rio · cotas 11 a 14 m',210,40,40,.5,X.topo.c);
+pl(240,170,210,40,MB(0x3d9ea5,{opacity:.12}),.32,X.hid.c);lab('Rio a ≈ 60 m da divisa oeste',40,40,-40,.5,X.hid.c);
+pl(240,50,210,-17,MB(0x2f9e44,{opacity:.4}),.33,X.veg.c);lab('Fragmento de mata ≈ 1,2 ha · fauna a inventariar',210,36,-17,.5,X.veg.c);
+[[120,-10],[170,60],[230,20],[285,80],[150,110],[260,-25]].forEach(([x,z],i)=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(1.4,1.4,24,10),M(0xf2b01e));c.position.set(x,12,z);X.solo.c.add(c);lab('SPT-0'+(i+1),x,30,z,.35,X.solo.c)});lab('Sondagens: argila arenosa · lençol a ≈ 2,5 m',210,48,40,.5,X.solo.c);
+const r=new THREE.Mesh(new THREE.CircleGeometry(48,40),MB(0xd7263d,{opacity:.28}));r.rotation.x=-PI/2;r.position.set(150,.4,190);X.rec.c.add(r);const r2=new THREE.Mesh(new THREE.RingGeometry(46,48,60),MB(0xd7263d,{opacity:.8}));r2.rotation.x=-PI/2;r2.position.set(150,.45,190);X.rec.c.add(r2);pl(300,80,200,250,MB(0xd7263d,{opacity:.14}),.35,X.rec.c);lab('Receptores sensíveis: escola e comunidade',200,50,230,.5,X.rec.c);
+pl(14,300,352,40,MB(0xe8c547,{opacity:.4}),.4,X.via.c);pl(26,10,345,100,MB(0xe8c547,{opacity:.5}),.4,X.via.c);lab('Acesso por rodovia · rua da escola sem capacidade para carretas',300,40,160,.5,X.via.c)}
+
+// ===== impactos × medidas
+const fence=new THREE.Group(),pipa=new THREE.Group(),lava=new THREE.Group(),bacias=new THREE.Group(),barr=new THREE.Group(),cort=new THREE.Group(),tNew=new THREE.Group();
+X.poeira.m.add(fence,pipa,lava);X.eros.m.add(bacias);X.ruido.m.add(barr,cort);S.add(tNew);
+{const o=M(0xff8f1f);bx(240,2.4,.5,210,-45,o,fence);bx(240,2.4,.5,210,125,o,fence);bx(.5,2.4,170,90,40,o,fence);bx(.5,2.4,170,330,40,o,fence);lab('Tapume e tela no perímetro',210,10,125,.4,fence);
+const w=new THREE.Group();bx(3,2.5,7,0,0,M(0x2d7ff9),w,1);bx(2.6,2.6,2.4,0,3.4,M(0x2d7ff9),w,.9);const pw=new THREE.Mesh(new THREE.CylinderGeometry(1.2,1.2,5,10),M(0x9ec9ff));pw.rotation.x=PI/2;pw.position.set(0,2.6,-1);w.add(pw);pipa.add(w);AN.push(t=>{const u=(t*.02)%1,a=LP.getPointAt(u),b=LP.getPointAt((u+.01)%1);w.position.set(a.x+6,0,a.z);w.lookAt(b.x+6,0,b.z)});lab('Caminhão-pipa: aspersão das vias internas',150,16,-30,.4,pipa);
+bx(14,.6,22,330,76,M(0x3d86b5),lava);lab('Lava-rodas na saída',330,12,76,.4,lava);
+bx(.4,1.3,170,92,40,M(0xe8e8e8),bacias);[[100,-22],[100,96]].forEach(([x,z])=>{bx(28,.8,18,x+6,z,M(0x7a5a3a),bacias);lab('Bacia de sedimentação',x,10,z,.4,bacias)});
+bx(240,5,.8,210,119,M(0xb9b6ad),barr);lab('Barreira acústica voltada à comunidade',210,12,119,.45,barr);
+trees(40,()=>[RN(95,325),RN(121,126)],cort,1.4);
+trees(60,()=>{const t=Math.random(),a=RV.getPoint(t),b=RV.getTangent(t),s=(Math.random()<.5?-1:1)*RN(20,45);return[a.x-b.z*s,a.z+b.x*s]},tNew,1.3);lab('APP preservada · plantio compensatório 2:1 · resgate de fauna',60,30,60,.45,tNew)}
+// supressão (sem medidas)
+pl(240,50,210,-17,MB(0xd7263d,{opacity:.28}),.4,X.sup.i);lab('Supressão de ≈ 1,2 ha de mata (permanente)',210,30,-17,.5,X.sup.i);
+for(let i=0;i<50;i++){const c=new THREE.Mesh(new THREE.CylinderGeometry(.7,.9,1,6),M(0x5a3d22));c.position.set(RN(97,323),.5,RN(-42,8));X.sup.i.add(c)}
+// poeira
+const dn=700,dp=new Float32Array(dn*3);function dz(i,f){dp[i*3]=RN(95,330);dp[i*3+1]=f?RN(0,40):RN(0,3);dp[i*3+2]=RN(-45,125)}for(let i=0;i<dn;i++)dz(i,1);
+const dg=new THREE.BufferGeometry();dg.setAttribute('position',new THREE.BufferAttribute(dp,3));const dpt=new THREE.Points(dg,new THREE.PointsMaterial({color:0xcdbb9c,size:7,transparent:true,opacity:.5,depthWrite:false}));X.poeira.c.add(dpt);lab('Poeira levada pelo vento para a comunidade',210,60,150,.45,X.poeira.i);
+// ruído
+const rings=[0,1,2].map(()=>{const m=new THREE.Mesh(new THREE.RingGeometry(.96,1,64),new THREE.MeshBasicMaterial({color:0xff7a2e,transparent:true,side:2,depthWrite:false}));m.rotation.x=-PI/2;m.position.set(210,.8,40);X.ruido.c.add(m);return m});
+// vibração
+{const r=new THREE.Mesh(new THREE.RingGeometry(68,70,80),MB(0xd7263d,{opacity:.9,side:2}));r.rotation.x=-PI/2;r.position.set(210,.6,40);X.vib.c.add(r);const d=new THREE.Mesh(new THREE.CircleGeometry(70,60),MB(0xd7263d,{opacity:.08}));d.rotation.x=-PI/2;d.position.set(210,.5,40);X.vib.c.add(d);lab('Zona de vibração perceptível',210,22,-35,.45,X.vib.c);
+for(let i=0;i<6;i++){const g=new THREE.Mesh(new THREE.CylinderGeometry(1,1,6,8),M(0xd7263d));g.position.set(110+i*40,3,138);X.vib.m.add(g)}lab('Laudo cautelar + geofones nos vizinhos',210,16,138,.45,X.vib.m)}
+// tráfego
+const cU=new THREE.CatmullRomCurve3([[360,.6,560],[360,.6,215],[200,.6,215],[110,.6,215],[110,.6,150],[160,.6,132],[200,.6,100]].map(V3)),cM=new THREE.CatmullRomCurve3([[360,.6,560],[360,.6,100],[330,.6,100],[290,.6,100]].map(V3));
+const rU=new THREE.Line(new THREE.BufferGeometry().setFromPoints(cU.getPoints(120)),new THREE.LineBasicMaterial({color:0xd7263d})),rM=new THREE.Line(new THREE.BufferGeometry().setFromPoints(cM.getPoints(60)),new THREE.LineBasicMaterial({color:0x2d7ff9}));X.traf.i.add(rU);X.traf.m.add(rM);
+lab('Rota exclusiva pela rodovia + pátio de espera interno',320,30,200,.5,X.traf.m);
+const TR=[];for(let i=0;i<14;i++){const g=new THREE.Group();bx(2.8,3,3,0,5,M(0x2d7ff9),g,.5);bx(3,3.2,11,0,-2,M(i%2?0xe8e8e8:0xf2b01e),g,.9);X.traf.c.add(g);TR.push(g)}
+// escoamento
+const wat=pl(30,76,108,25,M(0x3d8fc4,{roughness:.1}),.14,X.dren.m);lab('Reservatório de retardo',108,12,25,.45,X.dren.m);
+[[130,125],[200,128],[280,128],[160,-48]].forEach(([x,z])=>{const e=new THREE.Mesh(new THREE.CircleGeometry(1,24),M(0x3f8f7a));e.scale.set(14,4,1);e.rotation.x=-PI/2;e.position.set(x,.16,z);X.dren.m.add(e)});pl(46,22,235,105,M(0x9db596),.1,X.dren.m);lab('Jardins de chuva + piso permeável + reuso da água de telhado',200,22,128,.45,X.dren.m);
+const AR=[];for(let i=0;i<14;i++){const c=new THREE.Mesh(new THREE.ConeGeometry(2,8,10),M(i%2?0x2aa7d9:0x7fd3f0));c.rotation.z=PI/2;c.position.set(300-RN(0,200),1.5,-30+i*11);X.dren.c.add(c);AR.push(c)}lab('Pico de vazão em direção ao rio',150,24,-50,.45,X.dren.i);
+const rn=900,rp=new Float32Array(rn*3);for(let i=0;i<rn;i++){rp[i*3]=RN(60,360);rp[i*3+1]=RN(0,90);rp[i*3+2]=RN(-80,160)}const rg=new THREE.BufferGeometry();rg.setAttribute('position',new THREE.BufferAttribute(rp,3));X.dren.c.add(new THREE.Points(rg,new THREE.PointsMaterial({color:0x9ec9ff,size:1.6,transparent:true,opacity:.8})));
+// resíduos
+for(let i=0;i<14;i++){const h=RN(3,8),c=new THREE.Mesh(new THREE.ConeGeometry(h,h,8),M([0x9a948a,0xc0562d,0x3d86b5,0x6b4a2b][i%4]));c.position.set(RN(110,320),h/2,RN(-35,120));c.castShadow=true;X.res.i.add(c)}lab('Resíduos misturados, sem baias nem controle',230,26,110,.5,X.res.i);
+pl(70,12,268,-40,M(0x7d7468),.09,X.res.m);[['A','Concreto, solo',0x8d8a82],['B','Aço, plástico',0x2d7ff9],['C','Sem destino',0x7a4b2a],['D','Perigosos',0xff7a1a]].forEach(([k,t,c],i)=>{const x=248+i*16,m=M(c);bx(12,2.4,.5,x,-44,m,X.res.m);bx(.5,2.4,8,x-6,-40,m,X.res.m);bx(.5,2.4,8,x+6,-40,m,X.res.m);const cn=new THREE.Mesh(new THREE.ConeGeometry(4,2.4,10),M(c));cn.position.set(x,1.2,-40);X.res.m.add(cn);lab('Classe '+k,x,8,-40,.35,X.res.m)});lab('Baias por classe CONAMA 307 · CTR · destino licenciado',270,18,-52,.45,X.res.m);
+
+
+// ===== grupos extras
+const DIM=new THREE.Group(),FAU=new THREE.Group(),MON=new THREE.Group(),COMP=new THREE.Group();S.add(DIM,FAU,MON,COMP);
+{const L=(a,b)=>new THREE.Line(new THREE.BufferGeometry().setFromPoints([V3(a),V3(b)]),new THREE.LineBasicMaterial({color:0xf5e7a8}));
+DIM.add(L([90,2,-64],[330,2,-64]),L([90,2,-68],[90,2,-60]),L([330,2,-68],[330,2,-60]),L([356,2,-45],[356,2,125]),L([352,2,-45],[360,2,-45]),L([352,2,125],[360,2,125]));
+lab('240 m',210,12,-64,.5,DIM);lab('170 m',356,12,40,.5,DIM);lab('Área ≈ 4,1 ha (240 × 170 m)',210,34,40,.7,DIM);
+[[90,-45,'V1 · cota ≈ 11,8 m'],[330,-45,'V2 · cota ≈ 13,8 m'],[330,125,'V3 · cota ≈ 13,4 m'],[90,125,'V4 · cota ≈ 11,5 m']].forEach(([x,z,n])=>{const c=new THREE.Mesh(new THREE.CylinderGeometry(1.5,1.5,14,8),M(0xe3b505));c.position.set(x,7,z);DIM.add(c);lab(n,x,24,z,.4,DIM)});
+[['Norte: mata',210,-52],['Leste: rodovia',345,40],['Sul: via local',210,132],['Oeste: rio (≈ 60 m)',80,40]].forEach(([t,x,z])=>lab(t,x,14,z,.4,DIM))}
+{[[130,-20],[180,-30],[230,-15],[280,-28],[150,0],[260,0]].forEach(([x,z],i)=>{FAU.add(new THREE.LineLoop(new THREE.BufferGeometry().setFromPoints([[-5,-5],[5,-5],[5,5],[-5,5]].map(([a,b])=>V3([x+a,.8,z+b]))),new THREE.LineBasicMaterial({color:0xffd166})));lab('P'+(i+1),x,10,z,.3,FAU)});
+for(let i=0;i<9;i++){const s=new THREE.Mesh(new THREE.SphereGeometry(1.8,10,8),M(0xff8f1f));s.position.set(RN(100,320),3,RN(-60,0));FAU.add(s)}
+lab('Parcelas de inventário (10 × 10 m)',210,40,-17,.5,FAU);lab('Pontos de amostragem de fauna',200,24,-70,.45,FAU)}
+pl(26,170,77,40,MB(0x2f9e44,{opacity:.28}),.36,COMP);lab('Plantio compensatório 2:1 + APP preservada',60,34,100,.5,COMP);
+{const pin=(x,z,c,t)=>{const m=new THREE.Mesh(new THREE.CylinderGeometry(1.6,1.6,12,8),M(c));m.position.set(x,6,z);MON.add(m);lab(t,x,22,z,.4,MON)},a=RV.getPoint(.40),b=RV.getPoint(.62);
+pin(a.x,a.z,0x2d7ff9,'Água · montante');pin(b.x,b.z,0x2d7ff9,'Água · jusante');pin(110,40,0xe3b505,'Piezômetro');pin(300,40,0xe3b505,'Piezômetro');pin(210,132,0xb0b0b0,'Poeira (PM10)');pin(330,132,0xff8f1f,'Ruído (sonômetro)');pin(60,60,0x2f9e44,'Parcelas do plantio');pin(270,-38,0x7a4b2a,'Baias · CTR')}
+
+// ===== takes
+const TK=[
+{k:'Empreendimento',t:'Visão geral do empreendimento',d:'Centro de distribuição logístico “Mangue Verde”: dois galpões com cobertura solar, pátio de manobras, escritório, portaria e áreas verdes, em um lote à margem de rodovia e próximo a um rio.',m:[['Tipologia','Centro logístico'],['Galpões','2 × ≈ 130 × 45 m'],['Energia','Cobertura solar'],['Acesso','Rodovia · portaria']],n:'Caso didático para demonstrar as etapas de um estudo ambiental simplificado. Dimensões e níveis são de cenário.',cam:[[430,230,330],[210,0,40]],st:{imp:1,ph:2,mit:1}},
+{k:'Alternativas',t:'Escolha do terreno: alternativas locacionais',d:'Três lotes foram comparados em cinco critérios: zoneamento, acesso, adensamento do entorno, interferência em APP e vegetação, e risco de alagamento. O lote A está em várzea e na faixa de APP; o C fica em área adensada; o B reúne acesso e menor interferência em área protegida.',m:[['Lote A','13 / 25 pontos'],['Lote B (escolhido)','20 / 25 pontos'],['Lote C','14 / 25 pontos'],['Critérios','5, nota de 0 a 5']],n:'Notas ilustrativas. Em um estudo real, justificar cada nota com mapas e dados oficiais.',cam:[[560,520,760],[150,0,40]],st:{lots:1}},
+{k:'Terreno',t:'Caracterização do terreno',d:'O polígono do lote B tem quatro vértices cotados. Confrontantes: mata ao norte, rodovia a leste, via local ao sul e o rio a oeste, a cerca de 60 m da divisa.',m:[['Área','≈ 4,1 ha'],['Dimensões','240 × 170 m'],['Cotas','≈ 11,5 a 13,8 m'],['Declividade','≈ 1,5%']],n:'Valores de cenário. Substituir pelo levantamento topográfico, matrícula e certidão de uso e ocupação do solo.',cam:[[210,330,150],[210,0,40]],st:{dim:1}},
+{k:'Meio físico',t:'Meio físico: relevo, solo e lençol',d:'O terreno desce suavemente para o rio, e as curvas de nível mostram o caminho da água. As sondagens SPT indicam camada superficial argilo-arenosa e lençol raso, o que orienta fundação, terraplenagem e drenagem.',m:[['Relevo','Plano a suave'],['Solo','Argila arenosa'],['Lençol','≈ 2,5 m'],['Erosão','Risco médio']],n:'Cenário didático. Inserir perfis SPT, classes de solo e nível d’água medido em campo.',cam:[[330,150,180],[210,0,40]],st:{stu:['topo','solo']}},
+{k:'Água e APP',t:'Recursos hídricos e APP',d:'O rio, com cerca de 8 m de largura, margeia o lote a oeste. A faixa de APP (30 m por margem, para essa largura) fica fora da área construída. A água do pátio passará por um reservatório de retardo antes de chegar ao rio.',m:[['Curso d’água','≈ 8 m de largura'],['APP','30 m por margem'],['Distância','≈ 60 m da divisa'],['Reservatório','A dimensionar']],n:'A largura da APP depende do enquadramento do curso d’água (Código Florestal). Confirmar domínio hídrico e outorgas com o órgão competente.',cam:[[80,150,210],[60,0,40]],st:{stu:['hid']}},
+{k:'Flora e fauna',t:'Meio biótico: flora e fauna',d:'O diagnóstico de flora usa parcelas de inventário na mata do lote. A fauna é amostrada em campanhas nas estações seca e chuvosa. Espécies ameaçadas ou protegidas e ninhos são registrados antes de qualquer supressão.',m:[['Mata do lote','≈ 1,2 ha'],['Parcelas','6 de 10 × 10 m'],['Fauna','2 campanhas'],['Espécies protegidas','Verificar listas']],n:'Pontos de amostragem ilustrativos; não indicam ocorrência confirmada de espécies.',cam:[[210,130,110],[210,0,-17]],st:{stu:['veg'],fau:1}},
+{k:'Supressão',t:'Supressão vegetal e compensação',d:'A mata do lote será suprimida para implantar os galpões e o pátio. Cada marcador vermelho representa cerca de 3 árvores. A APP é preservada, e a compensação é de 2 árvores plantadas para cada árvore suprimida.',m:[['Área suprimida','≈ 1,2 ha'],['Árvores (estimativa)','≈ 480'],['Compensação 2:1','≈ 960 mudas'],['APP','Preservada']],n:'Estimativa de cenário (≈ 400 árvores por hectare). A quantidade real depende de inventário florestal e de autorização do órgão ambiental; não use este número como quantitativo de licença.',cam:[[330,130,60],[210,0,-10]],st:{comp:1,trees:'r',stu:['veg']},cnt:1},
+{k:'Terraplenagem',t:'Impactos: remoção da mata e terraplenagem',d:'Sem medidas, a remoção da mata e a terraplenagem expõem o solo: levantam poeira, geram ruído de máquinas e deixam terra solta que a chuva arrasta para o rio, deixando a água turva.',m:[['Poeira','ALTA · T'],['Ruído','ALTA · T'],['Erosão','ALTA · T'],['Supressão','ALTA · P']],n:'Níveis ilustrativos (T temporário, P permanente), a validar com o diagnóstico real. Use “Com medidas” para comparar.',cam:[[340,170,230],[210,0,10]],st:{imp:1,ph:0,mit:0,on:['sup','poeira','ruido','vib','eros'],pAnim:1},tog:1},
+{k:'Obra',t:'Impactos: obra, máquinas e resíduos',d:'Na obra, escavadeiras, retroescavadeiras, caminhões basculantes e betoneiras trabalham no lote. Sem controle, entulho e resíduos ficam misturados no terreno, e o ruído e a vibração aumentam.',m:[['Resíduos','ALTA · T'],['Ruído','ALTA · T'],['Poeira','MÉDIA · T'],['Vibração','MÉDIA · T']],n:'Níveis ilustrativos. A obra também gera empregos locais (impacto positivo, temporário).',cam:[[400,150,210],[210,0,30]],st:{imp:1,ph:1,mit:0,p:.55,on:['poeira','ruido','vib','res','eros','dren']},tog:1},
+{k:'Medidas',t:'Medidas mitigadoras na implantação',d:'Cada impacto recebe uma medida: tapume e caminhão-pipa contra a poeira, barreira acústica e cortina verde contra o ruído, bacias de sedimentação contra a erosão, laudo cautelar e geofones, e baias de resíduos separadas por classe (A a D) com controle de transporte.',m:[['Poeira','Aspersão · tapume · lava-rodas'],['Ruído','Barreira · janela diurna'],['Erosão','Bacias de sedimentação'],['Resíduos','Baias A–D · CTR']],n:'Medidas e indicadores devem constar em programas ambientais com responsável e periodicidade.',cam:[[390,130,200],[240,0,20]],st:{imp:1,ph:1,mit:1,p:.55,on:['poeira','ruido','vib','res','eros','dren'],comp:1},tog:1},
+{k:'Operação',t:'Operação: drenagem, efluentes e resíduos',d:'Na operação, o pátio impermeável acelera a água da chuva. O reservatório de retardo, os jardins de chuva, o piso permeável e o reuso da água de telhado reduzem o pico de vazão. Compare sem e com medidas.',m:[['Escoamento','ALTA · P sem controle'],['Com medidas','Vazão de saída ≤ referência'],['Efluentes','Tratamento e reuso'],['Resíduos','Coleta seletiva']],n:'A vazão de referência e o volume do reservatório dependem de estudo hidrológico (chuva de projeto, coeficiente de escoamento e capacidade do rio).',cam:[[330,200,280],[210,0,30]],st:{imp:1,ph:2,mit:1,on:['dren','res','ruido','sup'],comp:1},tog:1},
+{k:'Monitoramento',t:'Monitoramento e conclusão',d:'Programas: qualidade da água a montante e a jusante, piezômetros, poeira e ruído, gestão de resíduos, controle de erosão e acompanhamento do plantio compensatório. A viabilidade depende dos estudos, das autorizações e das condicionantes do órgão licenciador.',m:[['Água','Montante · jusante'],['Solo e lençol','Piezômetros'],['Ar e ruído','PM10 · sonômetro'],['Flora','Sobrevivência do plantio']],n:'Protótipo didático: não substitui EAS, RAS, EIA/RIMA nem licenças.',cam:[[300,250,270],[150,0,40]],st:{imp:1,ph:2,mit:1,mon:1,comp:1}}];
+let idx=0,SS={},vt=null,SHOWL=true,mk=0,au=null;
+const mkc=f=>{const a=tInC.instanceColor.array;for(let i=0;i<160;i++){const r=i<f*160;a[i*3]=r?.82:tInBase[i*3];a[i*3+1]=r?.18:tInBase[i*3+1];a[i*3+2]=r?.15:tInBase[i*3+2]}tInC.instanceColor.needsUpdate=true};
+function setView(v){vt={p:V3(v[0]),t:V3(v[1])}}
+function apply(){const imp=!!SS.imp,ph=SS.ph,mit=!!SS.mit,p=SS.p,on=k=>SS.on.includes(k),pre=ph<2;
+gl.visible=!!SS.lots;STK.forEach(k=>P[k].visible=SS.stu.includes(k));
+KEYS.forEach(k=>{P[k].visible=imp&&on(k);X[k].i.visible=!mit;X[k].m.visible=mit});
+X.eros.i.visible=!mit&&pre;X.eros.m.visible=mit&&pre;P.vib.visible=imp&&on('vib')&&pre;fence.visible=pipa.visible=lava.visible=bacias.visible=pre;X.dren.i.visible=!mit&&ph>=1;X.dren.m.visible=mit&&ph>=1;X.res.i.visible=!mit&&pre;X.dren.c.visible=ph>=1;barr.visible=cort.visible=ph>=1;
+tIn.visible=!imp||(ph==0&&p<.98);tIn.scale.y=imp&&ph==0?Math.max(.001,1-p):1;bare.visible=imp;bare.material.opacity=imp&&ph==0?Math.min(1,p*1.3):1;lawn.visible=imp&&ph==2;
+prj.visible=imp&&ph>=1;const f=ph==2?1:Math.min(1,p/.7);gals.forEach(g=>g.scale.y=Math.max(f,.001));infra.visible=ph==2||(ph==1&&p>.4);
+maq.visible=imp&&ph<2;m0.visible=ph==0;m1.visible=ph==1;dumps.forEach((d,i)=>d.g.visible=i<(ph==0?4:2));
+riv.color.set(!mit&&imp&&pre&&on('eros')?0x9a7b4f:0x3d86b5);dg.setDrawRange(0,!imp?0:mit?170:ph==2?100:700);dpt.material.opacity=!mit?.55:.3;
+tNew.visible=COMP.visible=!!SS.comp;DIM.visible=!!SS.dim;FAU.visible=!!SS.fau;MON.visible=!!SS.mon;SP.forEach(s=>s.visible=SHOWL)}
+const $$=id=>document.getElementById(id),pad=n=>String(n+1).padStart(2,'0');
+function render(){const k=TK[idx];$$('kicker').textContent=pad(idx)+' / '+pad(TK.length-1)+' · Estudo ambiental';$$('title').textContent=k.t;$$('desc').textContent=k.d;$$('metrics').innerHTML=k.m.map(m=>`<div class="metric"><strong>${m[1]}</strong><span>${m[0]}</span></div>`).join('');$$('note').textContent=k.n;
+$$('big').style.display=k.cnt?'block':'none';$$('big').innerHTML='≈ 0<small>árvores marcadas (estimativa de cenário)</small>';
+$$('counter').textContent=pad(idx)+' de '+pad(TK.length-1);$$('bar').style.width=(idx+1)/TK.length*100+'%';[...$$('thumbs').children].forEach((b,i)=>b.classList.toggle('active',i==idx));$$('thumbs').children[idx].scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+$$('mt').style.display=k.tog?'':'none';$$('mt').textContent=SS.mit?'Ver sem medidas':'Ver com medidas';$$('mt').classList.toggle('on',!!SS.mit);$$('panel').scrollTop=0}
+function go(n){idx=(n+TK.length)%TK.length;const k=TK[idx];SS=Object.assign({imp:0,ph:0,mit:0,p:.5,on:[],stu:[]},k.st);if(SS.pAnim)SS.p=0;mk=0;mkc(0);setView(k.cam);apply();render()}
+TK.forEach((k,i)=>{const b=document.createElement('button');b.className='thumb';b.title=k.t;b.innerHTML=`<small>TAKE ${pad(i)}</small>${k.k}`;b.onclick=()=>go(i);$$('thumbs').appendChild(b)});
+$$('next').onclick=()=>go(idx+1);$$('back').onclick=()=>go(idx-1);$$('home').onclick=()=>{setView(TK[idx].cam)};
+$$('mt').onclick=()=>{SS.mit=SS.mit?0:1;apply();render()};$$('lb').onclick=()=>{SHOWL=!SHOWL;$$('lb').classList.toggle('on',!SHOWL);apply()};
+$$('au').onclick=()=>{if(au){clearInterval(au);au=null;$$('au').textContent='Auto ▶';$$('au').classList.remove('on')}else{au=setInterval(()=>go(idx+1),12000);$$('au').textContent='Auto ■';$$('au').classList.add('on')}};
+addEventListener('keydown',e=>{if(e.key=='ArrowRight'||e.key=='PageDown'||e.key==' ')go(idx+1);if(e.key=='ArrowLeft'||e.key=='PageUp')go(idx-1);if(e.key=='Home')go(0);if(e.key=='End')go(TK.length-1)});
+$$('thumbs').addEventListener('wheel',e=>{e.preventDefault();$$('thumbs').scrollLeft+=e.deltaY+e.deltaX},{passive:false});
+{let tx=0;['panel'].forEach(id=>{const el=$$(id);el.addEventListener('touchstart',e=>tx=e.touches[0].clientX,{passive:true});el.addEventListener('touchend',e=>{const dx=e.changedTouches[0].clientX-tx;if(Math.abs(dx)>90)go(idx+(dx<0?1:-1))},{passive:true})})}
+ctl.addEventListener('start',()=>{vt=null});
+function rs(){R.setSize(innerWidth,innerHeight,false);cam.aspect=innerWidth/innerHeight;if(innerWidth>900)cam.setViewOffset(innerWidth,innerHeight,170,0,innerWidth,innerHeight);else cam.setViewOffset(innerWidth,innerHeight,0,innerHeight*.2,innerWidth,innerHeight);cam.updateProjectionMatrix()}addEventListener('resize',rs);rs();
+go(0);
+const clk=new THREE.Clock();(function loop(){requestAnimationFrame(loop);const t=clk.getElapsedTime(),ph=SS.ph,mit=!!SS.mit;
+if(vt){cam.position.lerp(vt.p,.05);ctl.target.lerp(vt.t,.07)}
+if(SS.pAnim&&SS.p<1){SS.p=Math.min(1,SS.p+.0028);apply()}
+if(SS.trees=='r'&&mk<1){mk=Math.min(1,mk+.004);mkc(mk);const b=$$('big');if(b.firstChild)b.firstChild.textContent='≈ '+Math.round(mk*480)}
+AN.forEach(f=>f(t));
+if(maq.visible)dumps.forEach((d,i)=>{if(!d.g.visible)return;const u=(t*.018+i/4)%1,a=LP.getPointAt(u),b=LP.getPointAt((u+.01)%1);d.g.position.set(a.x,0,a.z);d.g.lookAt(b.x,0,b.z);d.bd.rotation.x=-.45*Math.max(0,Math.sin(u*PI*8))});
+if(P.poeira.visible){const n=dg.drawRange.count;for(let i=0;i<n;i++){dp[i*3+1]+=.22;dp[i*3+2]+=mit?.05:.18;if(dp[i*3+1]>(mit?14:40))dz(i,0)}dg.attributes.position.needsUpdate=true}
+if(P.ruido.visible)rings.forEach((r,i)=>{const s=(t*.2+i/3)%1,R0=mit?(ph==2?60:100):(ph==2?100:170);r.scale.setScalar(30+s*R0);r.material.opacity=(1-s)*.8;r.material.color.set(mit?0xffa65c:0xe0382b)});
+if(P.traf.visible){const n=ph==0?6:ph==1?10:14;TR.forEach((g,i)=>{g.visible=i<n;const u=(t*.035+i/n)%1,a=cM.getPointAt(u),b=cM.getPointAt((u+.01)%1);g.position.set(a.x,0,a.z);g.lookAt(b.x,0,b.z)})}
+if(P.dren.visible){const q=rg.attributes.position.array;for(let i=0;i<rn;i++){q[i*3+1]-=1.6;if(q[i*3+1]<0)q[i*3+1]=90}rg.attributes.position.needsUpdate=true;const sp=mit?.12:.55;AR.forEach((a,i)=>{a.visible=mit?i<5:true;a.position.x-=sp;if(a.position.x<95)a.position.x=300})}
+ctl.update();R.render(S,cam)})();
+</script></body></html>
